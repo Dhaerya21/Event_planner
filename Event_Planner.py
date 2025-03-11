@@ -2,6 +2,7 @@ import os
 import datetime as d
 import time
 import json
+import threading
 
 File_path = "Events.json"
 
@@ -31,13 +32,15 @@ def Add_Event(Title,date_time):
 def View_Events():
     Events =Load_Event()
     if not Events:
-        return "the Events List is Empty\nTime to get Planning🌴✈️"
+        print("the Events List is Empty\nTime to get Planning🌴✈️")
+        return 
     
+    print("\n📅 Upcoming Events:")
     for event in Events:
         time=d.datetime.fromisoformat(Events[event])
-        formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        formatted_time = time.strftime('%Y-%m-%d %H:%M:%S')
         print(f"{event} : {formatted_time}")
-    return "These are all your Events ,Enjoy your Events🌃"
+    print("These are all your Events ,Enjoy your Events🌃")
 
 def Update_Event(Title,choice):  
     Events =Load_Event()
@@ -52,15 +55,27 @@ def Update_Event(Title,choice):
         return f"{Title} has been updated succesfully😊"
     else:
         del Events[Title]
-        return f"{Title} has been deleted successfully!"
+        Save_Event(Events)
+        return f"{Title} has been deleted successfully🗑️"
 
 
 def Reminder():
-    pass
+    '''this is to remind the user that the events are near'''
+
+    while True:
+        Event =Load_Event()
+        curr_time = d.datetime.now()
+        for event, event_time in Event.items():
+            formatted_time = d.datetime.fromisoformat(event_time)
+            remaining_time = (formatted_time - curr_time).total_seconds()
+            if 0 <= remaining_time <= 600:
+                print(f"\nIt is time for {event} at {formatted_time.strftime('%Y-%m-%d %H:%M:%S')}\nGet Ready🥳  (press ctrl+s to stop)")
+        time.sleep(10)
 
 def main():
-    event = {"title" :"date & time"}
     reference = True
+    reminder_thread = threading.Thread(target=Reminder, daemon=True)
+    reminder_thread.start()  
     while reference:
         print("what do you Want to do:\n1.Add An Event \n2.Update an Event \n3.View all upcoming Event \n4.exit ")
         choice =int(input("enter your Choice: "))
@@ -83,8 +98,7 @@ def main():
                 message =Update_Event(Title,choice)
                 print(message+"\n")
             case 3:
-                message=View_Events()
-                print(message+"\n")
+                View_Events()
             case 4:
                 reference = False
             case _:
