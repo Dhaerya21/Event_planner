@@ -36,10 +36,24 @@ def View_Events():
     for event in Events:
         time=d.datetime.fromisoformat(Events[event])
         formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
-        print(f"{event}       Timing ={formatted_time}")
+        print(f"{event} : {formatted_time}")
+    return "These are all your Events ,Enjoy your Events🌃"
 
-def Update_Event():  
-    pass
+def Update_Event(Title,choice):  
+    Events =Load_Event()
+    if not Events:
+        return "the Events List is Empty\nTime to get Planning🌴✈️"
+    if Title not in Events:
+        return f"{Title} is not present in event list🤔"
+    if choice==1:
+        date_time = d.datetime.strptime(input("Enter date and time in format YYYY MM DD HH MM SS: "),"%Y %m %d %H %M %S")
+        Events[Title]=date_time
+        Save_Event(Events)
+        return f"{Title} has been updated succesfully😊"
+    else:
+        del Events[Title]
+        return f"{Title} has been deleted successfully!"
+
 
 def Reminder():
     pass
@@ -57,10 +71,20 @@ def main():
                 message= Add_Event(Title,date_time)
                 print(message+"\n")
             case 2:
-                Update_Event()
+                Title=input("Enter the name of the Event you want to update: ").capitalize()
+                print("1.Change Time\n2.Delete Event")
+                choice=int(input("enter Your Choice: "))
+                while True:
+                    if choice==1 or choice==2:
+                        break
+                    else:
+                        print("enter valid Choice😑")
+                        choice=int(input("enter Your Choice: "))
+                message =Update_Event(Title,choice)
+                print(message+"\n")
             case 3:
-                View_Events()
-                print("\n")
+                message=View_Events()
+                print(message+"\n")
             case 4:
                 reference = False
             case _:
