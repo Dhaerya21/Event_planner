@@ -1,5 +1,5 @@
 import os
-import datetime
+import datetime as d
 import time
 import json
 
@@ -23,13 +23,20 @@ def Add_Event(Title,date_time):
         Events=Load_Event()
         Events[Title]=date_time.isoformat()
         Save_Event(Events)
-        return f"Your {Title} Event was added successfully"
+        return f"Your {Title} Event was added successfully🤩"
     
     except Exception as e:
         return f"Something Went Wrong : {e}"
 
 def View_Events():
-    pass
+    Events =Load_Event()
+    if not Events:
+        return "the Events List is Empty\nTime to get Planning🌴✈️"
+    
+    for event in Events:
+        time=d.datetime.fromisoformat(Events[event])
+        formatted_time = time.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"{event}       Timing ={formatted_time}")
 
 def Update_Event():  
     pass
@@ -46,13 +53,14 @@ def main():
         match choice:
             case 1:
                 Title=input("Enter the name of the Event: ").capitalize()
-                date_time=datetime.datetime.strptime(input("Enter date and time in format YYYY MM DD HH MM SS: "),"%Y %m %d %H %M %S")
+                date_time=d.datetime.strptime(input("Enter date and time in format YYYY MM DD HH MM SS: "),"%Y %m %d %H %M %S")
                 message= Add_Event(Title,date_time)
-                print(message)
+                print(message+"\n")
             case 2:
                 Update_Event()
             case 3:
                 View_Events()
+                print("\n")
             case 4:
                 reference = False
             case _:
