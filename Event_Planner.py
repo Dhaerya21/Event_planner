@@ -47,7 +47,7 @@ def Update_Event(Title,choice):
         return f"{Title} is not present in event list🤔"
     if choice==1:
         date_time = d.datetime.strptime(input("Enter date and time in format YYYY MM DD HH MM SS: "),"%Y %m %d %H %M %S")
-        Events[Title]=date_time
+        Events[Title]=date_time.isoformat()
         Save_Event(Events)
         return f"{Title} has been updated succesfully😊"
     else:
