@@ -1,11 +1,19 @@
 import os
-import pyaudio
+import pygame
 import datetime as d
 import time
 import json
 import threading
 
 File_path = "Events.json"
+Audio= "Audio.mp3"
+
+def play_audio():
+    pygame.mixer.init()
+    pygame.mixer.music.load(Audio)
+    pygame.mixer.music.play()
+    time.sleep(60)
+    pygame.mixer.music.stop()
 
 def Load_Event():
     if os.path.exists(File_path):
@@ -69,8 +77,11 @@ def Reminder():
         for event, event_time in Event.items():
             formatted_time = d.datetime.fromisoformat(event_time)
             remaining_time = (formatted_time - curr_time).total_seconds()
-            if 0 <= remaining_time <= 600:
-                print(f"\nIt is time for {event} at {formatted_time.strftime('%Y-%m-%d %H:%M:%S')}\nGet Ready🥳  (press ctrl+s to stop)")
+            if 0 <= remaining_time <= 180:
+                print(f"\nIt is time for {event} at {formatted_time.strftime('%Y-%m-%d %H:%M:%S')}\nGet Ready🥳 ")
+                play_audio()
+                time.sleep(180)
+        
         time.sleep(10)
 
 def main():
